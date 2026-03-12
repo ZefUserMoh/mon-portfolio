@@ -1,0 +1,239 @@
+/* douceurs-gourmandises/css/style.css */
+:root {
+    --primary-color: #BC6C25; /* Caramel Intense */
+    --secondary-color: #F4EBD0; /* Crème Vanille */
+    --accent-color: #283618; /* Vert Sombre / Menthe */
+    --text-color: #333;
+    --white: #ffffff;
+    --font-heading: 'Playfair Display', serif;
+    --font-body: 'Lato', sans-serif;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-body);
+    color: var(--text-color);
+    line-height: 1.6;
+}
+
+h1, h2, h3 {
+    font-family: var(--font-heading);
+    color: var(--accent-color);
+}
+
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem 10%;
+    background-color: var(--white);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.logo {
+    font-family: var(--font-heading);
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: var(--primary-color);
+}
+
+.nav-links {
+    list-style: none;
+    display: flex;
+}
+
+.nav-links li {
+    margin-left: 2rem;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: var(--text-color);
+    font-weight: 500;
+    transition: color 0.3s;
+}
+
+.nav-links a:hover {
+    color: var(--primary-color);
+}
+
+.nav-links a.active {
+    color: var(--primary-color);
+    font-weight: 700;
+    border-bottom: 2px solid var(--primary-color);
+    padding-bottom: 2px;
+}
+
+/* Hero Section */
+.hero {
+    height: 85vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    background: linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)),
+                url('../images/hero/sophie-atelier.png');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    color: var(--white);
+    padding: 0 5%;
+}
+
+.hero-content {
+    max-width: 800px;
+    padding: 3rem;
+    background: rgba(0, 0, 0, 0.35);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+}
+
+.hero h1 {
+    color: var(--white);
+    font-size: clamp(2rem, 5vw, 3.5rem); /* Taille adaptative */
+    margin-bottom: 1.5rem;
+    line-height: 1.2;
+    text-shadow: 2px 2px 8px rgba(0,0,0,0.6);
+}
+
+.hero p {
+    font-size: 1.2rem;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+    text-shadow: 1px 1px 4px rgba(0,0,0,0.6);
+}
+
+/* Footer */
+footer {
+    background-color: var(--accent-color);
+    color: var(--white);
+    padding: 3rem 10%;
+    text-align: center;
+}
+
+.btn {
+    display: inline-block;
+    padding: 0.8rem 2rem;
+    background-color: var(--primary-color);
+    color: var(--white);
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background 0.3s;
+}
+
+.btn:hover {
+    background-color: #A35A1E; /* Caramel plus sombre pour le clic */
+}
+
+/* Grille de produits */
+.produits-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    padding: 3rem 10%;
+}
+
+.produit-card {
+    background: var(--white);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Ajout transition ombre */
+    text-align: center;
+    padding-bottom: 1.5rem;
+}
+
+.produit-card:hover {
+    transform: translateY(-5px); /* Soulèvement léger */
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1); /* Ombre plus marquée */
+}
+
+.produit-card img {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+    /* On ajoute l'arrondi en haut pour épouser la forme de la carte */
+    border-radius: 15px 15px 0 0; 
+    border-bottom: 2px solid var(--secondary-color);
+}
+
+.produit-img-placeholder {
+    width: 100%;
+    height: 250px;
+    /* On enlève le flex et le centrage du texte car l'image va tout remplir */
+    overflow: hidden; 
+}
+
+.produit-img-placeholder img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* L'image remplit la case sans s'écraser */
+    display: block;
+}
+
+.produit-card h3 {
+    margin: 1.5rem 0 0.5rem;
+}
+
+.produit-card .prix {
+    color: var(--primary-color);
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+/* Formulaires */
+form {
+    max-width: 600px;
+    margin: 3rem auto;
+    padding: 2rem;
+    background: var(--white);
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+    text-align: left;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+}
+
+.form-group input, .form-group textarea, .form-group select {
+    width: 100%;
+    padding: 0.8rem;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-family: inherit;
+}
+
+.form-group textarea {
+    height: 150px;
+}
+ .categorie-titre {
+    grid-column: 1 / -1; /* Prend toute la largeur de la grille */
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    margin: 3rem 0 1.5rem 0;
+    border-bottom: 2px solid var(--primary-color);
+    padding-bottom: 0.5rem;
+}
+
+.allergene {
+    font-size: 0.8rem;
+    color: #888;
+    font-style: italic;
+    margin-top: 5px;
+}

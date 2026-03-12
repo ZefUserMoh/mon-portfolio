@@ -1,0 +1,464 @@
+<!-- douceurs-gourmandises/paiement.html -->
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paiement - Douceurs & Gourmandises</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        body { background: #faf8f4; }
+
+        /* ── SUCCESS OVERLAY ──────────────────────── */
+        #success-overlay {
+            position: fixed; inset: 0;
+            background: var(--accent-color);
+            z-index: 9999;
+            display: flex; align-items: center; justify-content: center; flex-direction: column;
+            text-align: center; padding: 2rem;
+            opacity: 0; pointer-events: none;
+            transition: opacity 0.5s ease;
+        }
+        #success-overlay.visible { opacity: 1; pointer-events: all; }
+        .success-inner { max-width: 560px; transform: translateY(30px); transition: transform 0.6s ease 0.15s; }
+        #success-overlay.visible .success-inner { transform: translateY(0); }
+        .success-icon {
+            width: 80px; height: 80px; border-radius: 50%;
+            background: rgba(255,255,255,0.1); border: 2px solid #C9A84C;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 2rem; margin: 0 auto 1.5rem;
+        }
+        .s-orn { font-size: 0.72rem; letter-spacing: 0.35em; text-transform: uppercase; color: #C9A84C; margin-bottom: 1rem; }
+        .success-inner h2 { font-family: 'Playfair Display', serif; font-size: clamp(1.8rem,4vw,2.8rem); color: #fff; margin-bottom: 1.25rem; }
+        .success-inner h2 span { color: #C9A84C; }
+        .s-div { width: 50px; height: 2px; background: #C9A84C; margin: 0 auto 1.5rem; opacity: 0.5; }
+        .success-inner p { color: rgba(255,255,255,0.82); font-size: 1rem; line-height: 1.75; margin-bottom: 2rem; }
+        .s-back {
+            display: inline-flex; align-items: center; gap: 0.5rem;
+            padding: 0.85rem 2rem; background: transparent;
+            border: 1.5px solid rgba(255,255,255,0.35); border-radius: 8px;
+            color: #fff; font-family: 'Lato',sans-serif; font-size: 0.88rem;
+            font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
+            text-decoration: none; cursor: pointer;
+            transition: background 0.2s, border-color 0.2s;
+        }
+        .s-back:hover { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.6); }
+
+        /* ── LAYOUT ───────────────────────────────── */
+        .page-wrapper {
+            max-width: 1100px; margin: 0 auto;
+            padding: 3rem 4% 6rem;
+            display: grid;
+            grid-template-columns: 1fr 420px;
+            gap: 2rem;
+            align-items: start;
+        }
+
+        /* ── CARD ─────────────────────────────────── */
+        .card {
+            background: #fff; border: 1px solid #ede8de;
+            border-radius: 16px; padding: 2rem; margin-bottom: 1.5rem;
+        }
+        .card-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.15rem; color: var(--accent-color);
+            margin-bottom: 1.5rem; padding-bottom: 0.85rem;
+            border-bottom: 1px solid #ede8de;
+        }
+
+        /* ── ORDER RECAP ──────────────────────────── */
+        .recap-row {
+            display: flex; align-items: center; gap: 0.85rem;
+            padding: 0.85rem 0; border-bottom: 1px solid #f5f0e8;
+        }
+        .recap-row:last-child { border-bottom: none; }
+        .recap-img {
+            width: 48px; height: 48px; border-radius: 8px; object-fit: cover; flex-shrink: 0;
+        }
+        .recap-img-ph {
+            width: 48px; height: 48px; border-radius: 8px;
+            background: var(--secondary-color); display: flex;
+            align-items: center; justify-content: center; font-size: 1.3rem; flex-shrink: 0;
+        }
+        .recap-name { font-size: 0.9rem; font-weight: 700; color: #2c2c2c; }
+        .recap-sub  { font-size: 0.78rem; color: #aaa; font-style: italic; }
+        .recap-price{ font-weight: 700; color: var(--primary-color); font-size: 0.9rem; margin-left: auto; white-space: nowrap; }
+
+        .recap-total-box {
+            background: #fdf8f2; border: 1px solid #f2d9b5;
+            border-radius: 10px; padding: 1rem 1.25rem; margin-top: 1rem;
+        }
+        .recap-line {
+            display: flex; justify-content: space-between;
+            font-size: 0.88rem; color: #888; margin-bottom: 0.45rem;
+        }
+        .recap-line.big {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.25rem; font-weight: 700;
+            color: var(--primary-color); margin-top: 0.75rem;
+            padding-top: 0.75rem; border-top: 1px solid #e8d9b5;
+            margin-bottom: 0;
+        }
+
+        /* ── CLIENT INFO RECAP ────────────────────── */
+        .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem 1.5rem; }
+        .info-item label { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; color: #ccc; display: block; margin-bottom: 0.1rem; }
+        .info-item span  { font-size: 0.88rem; color: #444; }
+
+        /* ── PAYMENT OPTIONS ──────────────────────── */
+        .pay-options { display: flex; flex-direction: column; gap: 0.75rem; }
+        .pay-opt { cursor: pointer; }
+        .pay-opt input[type="radio"] {
+            position: absolute; opacity: 0; width: 0; height: 0; pointer-events: none;
+        }
+        .pay-opt-inner {
+            border: 2px solid #e0d8cc; border-radius: 12px;
+            padding: 1rem 1.25rem; display: flex; align-items: flex-start; gap: 0.85rem;
+            transition: border-color 0.2s, background 0.2s;
+            cursor: pointer;
+        }
+        .pay-opt-inner.selected {
+            border-color: var(--primary-color); background: #fdf8f2;
+        }
+        .pay-icon { font-size: 1.6rem; flex-shrink: 0; }
+        .pay-label { font-weight: 700; font-size: 0.9rem; color: #2c2c2c; margin-bottom: 0.2rem; }
+        .pay-desc { font-size: 0.8rem; color: #999; line-height: 1.5; }
+
+        /* Bank transfer details (shown when virement selected) */
+        .virement-details {
+            display: none;
+            margin-top: 0.65rem;
+            padding: 0.85rem 1rem;
+            background: #faf8f4;
+            border-radius: 8px;
+            border: 1px solid #e8d9b5;
+            font-size: 0.8rem;
+            color: #666;
+            line-height: 1.8;
+        }
+        .virement-details.show { display: block; }
+        .virement-details strong { color: #444; }
+
+        /* ── CONFIRM BUTTON ───────────────────────── */
+        .btn-confirm {
+            display: block; width: 100%;
+            padding: 1.1rem; margin-top: 1.5rem;
+            background: var(--primary-color); color: #fff;
+            border: none; border-radius: 10px;
+            font-family: 'Lato', sans-serif;
+            font-size: 1rem; font-weight: 700; letter-spacing: 0.04em;
+            text-align: center; cursor: pointer;
+            transition: background 0.2s, transform 0.1s, box-shadow 0.2s;
+            box-shadow: 0 4px 16px rgba(188,108,37,0.28);
+        }
+        .btn-confirm:hover { background: #a55c1e; transform: translateY(-1px); }
+        .btn-confirm:active { transform: translateY(0); }
+
+        .back-link {
+            display: block; text-align: center; margin-top: 0.85rem;
+            font-size: 0.82rem; color: #bbb; text-decoration: none;
+        }
+        .back-link:hover { color: var(--primary-color); }
+
+        .secure-badges {
+            display: flex; justify-content: center; gap: 1.25rem;
+            margin-top: 1.25rem;
+        }
+        .badge {
+            display: flex; align-items: center; gap: 0.3rem;
+            font-size: 0.72rem; color: #ccc; font-weight: 700;
+            letter-spacing: 0.04em;
+        }
+
+        /* ── NOTICE BOX ───────────────────────────── */
+        .notice {
+            display: flex; align-items: flex-start; gap: 0.75rem;
+            background: #fff8ee; border: 1px solid #f0d9a8;
+            border-radius: 10px; padding: 1rem 1.25rem;
+            font-size: 0.82rem; color: #7a5c22; line-height: 1.6;
+        }
+        .notice .n-icon { font-size: 1.2rem; flex-shrink: 0; }
+
+        @media (max-width: 900px) {
+            .page-wrapper { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 600px) {
+            .info-grid { grid-template-columns: 1fr; }
+            .page-wrapper { padding: 1.5rem 4% 4rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- SUCCESS OVERLAY -->
+    <div id="success-overlay">
+        <div class="success-inner">
+            <div class="success-icon">✓</div>
+            <div class="s-orn">Douceurs & Gourmandises · Lyon</div>
+            <h2>Merci <span id="s-prenom"></span> !</h2>
+            <div class="s-div"></div>
+            <p>
+                Ta demande a bien été envoyée. Je reviens vers toi par e-mail ou téléphone
+                <strong style="color:#fff;">sous 24h</strong> pour confirmer la disponibilité
+                et procéder au règlement.<br><br>
+                À très vite chez <em style="color:#C9A84C;">Douceurs & Gourmandises</em> !
+            </p>
+            <a href="index.html" class="s-back">← Retour à l'accueil</a>
+        </div>
+    </div>
+
+    <!-- NAV -->
+    <nav>
+        <div class="logo">Douceurs & Gourmandises</div>
+        <ul class="nav-links">
+            <li><a href="index.html">Accueil</a></li>
+            <li><a href="patisseries.html" class="active">Nos Pâtisseries</a></li>
+            <li><a href="panier.html">🛒 Panier</a></li>
+            <li><a href="contact.html">Contact</a></li>
+        </ul>
+    </nav>
+
+    <!-- HEADER -->
+    <header style="background-color: var(--secondary-color); padding: 2.5rem 10%; text-align: center;">
+        <p style="text-transform: uppercase; letter-spacing: 2px; color: var(--primary-color); font-size: 0.85rem;">✦ Dernière étape ✦</p>
+        <h1 style="font-family: 'Playfair Display', serif; font-size: 2.5rem; color: var(--primary-color); margin: 0.75rem 0;">Confirmation & Paiement</h1>
+    </header>
+
+    <!-- PROGRESS BAR -->
+    <div style="display: flex; justify-content: center; gap: 3rem; padding: 1.2rem; background: white; border-bottom: 1px solid #eee; font-family: 'Lato', sans-serif; font-size: 0.8rem; font-weight: bold; text-transform: uppercase;">
+        <div style="display: flex; align-items: center; gap: 10px; color: #ccc;"><span style="border: 1px solid #ccc; width: 25px; height: 25px; display: flex; align-items: center; justify-content: center; border-radius: 50%;">1</span> Nos Pâtisseries</div>
+        <div style="display: flex; align-items: center; gap: 10px; color: #ccc;"><span style="border: 1px solid #ccc; width: 25px; height: 25px; display: flex; align-items: center; justify-content: center; border-radius: 50%;">2</span> Mon Panier</div>
+        <div style="display: flex; align-items: center; gap: 10px; color: var(--primary-color);"><span style="background: var(--primary-color); color: white; width: 25px; height: 25px; display: flex; align-items: center; justify-content: center; border-radius: 50%;">3</span> Paiement</div>
+    </div>
+
+    <!-- MAIN -->
+    <div class="page-wrapper">
+
+        <!-- LEFT: RECAP -->
+        <div>
+            <!-- Order items recap -->
+            <div class="card">
+                <div class="card-title">🛒 Récapitulatif de votre commande</div>
+                <div id="recap-items"></div>
+                <div class="recap-total-box" id="recap-totals"></div>
+            </div>
+
+            <!-- Client info recap -->
+            <div class="card">
+                <div class="card-title">👤 Vos informations</div>
+                <div class="info-grid" id="client-info"></div>
+            </div>
+        </div>
+
+        <!-- RIGHT: PAYMENT -->
+        <div>
+            <div class="card">
+                <div class="card-title">💳 Mode de règlement</div>
+
+                <div class="notice" style="margin-bottom: 1.5rem;">
+                    <span class="n-icon">ℹ️</span>
+                    <span>Sophie vous contactera <strong>sous 24h</strong> pour confirmer votre commande et finaliser le règlement selon le mode choisi ci-dessous.</span>
+                </div>
+
+                <div class="pay-options">
+                    <label class="pay-opt">
+                        <input type="radio" name="pay" value="virement" checked>
+                        <div class="pay-opt-inner">
+                            <span class="pay-icon">🏦</span>
+                            <div>
+                                <div class="pay-label">Virement bancaire</div>
+                                <div class="pay-desc">Coordonnées bancaires envoyées par e-mail lors de la confirmation.</div>
+                                <div class="virement-details show" id="virement-info">
+                                    <strong>À réception de la confirmation :</strong><br>
+                                    Titulaire : <strong>Douceurs & Gourmandises</strong><br>
+                                    IBAN : <strong>FR76 XXXX XXXX XXXX XXXX XXXX XXX</strong><br>
+                                    Référence : votre nom + date de retrait
+                                </div>
+                            </div>
+                        </div>
+                    </label>
+
+                    <label class="pay-opt">
+                        <input type="radio" name="pay" value="especes">
+                        <div class="pay-opt-inner">
+                            <span class="pay-icon">💵</span>
+                            <div>
+                                <div class="pay-label">Espèces ou Chèque</div>
+                                <div class="pay-desc">Règlement au moment du retrait en boutique à Lyon.</div>
+                            </div>
+                        </div>
+                    </label>
+
+                    <label class="pay-opt">
+                        <input type="radio" name="pay" value="cb">
+                        <div class="pay-opt-inner">
+                            <span class="pay-icon">💳</span>
+                            <div>
+                                <div class="pay-label">Carte bancaire en boutique</div>
+                                <div class="pay-desc">Terminal de paiement disponible lors du retrait en boutique.</div>
+                            </div>
+                        </div>
+                    </label>
+
+                    <label class="pay-opt">
+                        <input type="radio" name="pay" value="bancontact">
+                        <div class="pay-opt-inner">
+                            <span class="pay-icon" style="display:flex;align-items:center;">
+                                <svg width="36" height="24" viewBox="0 0 36 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <rect width="36" height="24" rx="4" fill="#005499"/>
+                                    <rect x="0" y="14" width="36" height="10" rx="0" fill="#F5A623"/>
+                                    <rect x="0" y="14" width="36" height="3" fill="#F5A623"/>
+                                    <text x="4" y="11" font-family="Arial" font-weight="bold" font-size="7" fill="white">Bancontact</text>
+                                </svg>
+                            </span>
+                            <div>
+                                <div class="pay-label">Bancontact</div>
+                                <div class="pay-desc">Paiement sécurisé via votre application bancaire ou carte Bancontact.</div>
+                            </div>
+                        </div>
+                    </label>
+                </div>
+
+                <button class="btn-confirm" id="btn-confirm">
+                    Confirmer ma commande →
+                </button>
+                <a href="panier.html" class="back-link">← Modifier mon panier</a>
+                <div class="secure-badges">
+                    <span class="badge">🔒 Commande sécurisée</span>
+                    <span class="badge">✓ Réponse sous 24h</span>
+                    <span class="badge">🌿 Artisan local</span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Douceurs & Gourmandises · Pâtisserie Artisanale · Lyon</p>
+    </footer>
+
+    <script>
+    (function () {
+        const fmt = n => n.toFixed(2).replace('.', ',') + ' €';
+
+        const cart     = JSON.parse(localStorage.getItem('dg_cart'))     || [];
+        const customer = JSON.parse(localStorage.getItem('dg_customer')) || {};
+        const details  = JSON.parse(localStorage.getItem('dg_details'))  || {};
+
+        /* ── If cart empty → redirect ────────────── */
+        if (!cart.length) {
+            window.location.href = 'panier.html';
+            return;
+        }
+
+        /* ── Render cart recap ───────────────────── */
+        const recapEl = document.getElementById('recap-items');
+        cart.forEach(item => {
+            const d = details[item.id] || {};
+            const div = document.createElement('div');
+            div.className = 'recap-row';
+            let extra = '';
+            if (d.message)           extra += `<div style="font-size:0.75rem;color:#888;margin-top:2px;">💬 "${d.message}"</div>`;
+            if (d.allergies?.length) extra += `<div style="font-size:0.72rem;color:#BC6C25;margin-top:2px;">⚠️ ${d.allergies.join(', ')}</div>`;
+
+            div.innerHTML = `
+                <img class="recap-img" src="${item.img}" alt="${item.name}"
+                     onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+                <div class="recap-img-ph" style="display:none;">🥐</div>
+                <div style="flex:1;">
+                    <div class="recap-name">${item.name} <span style="font-weight:400;color:#bbb;">×${item.qty}</span></div>
+                    <div class="recap-sub">${item.sub}</div>
+                    ${extra}
+                </div>
+                <div class="recap-price">${fmt(item.price * item.qty)}</div>`;
+            recapEl.appendChild(div);
+        });
+
+        /* ── Totals ─────────────────────────────── */
+        const subtotal = cart.reduce((s, i) => s + i.price * i.qty, 0);
+        const isLiv    = customer.livraison;
+        const total    = subtotal + (isLiv ? 5 : 0);
+        document.getElementById('recap-totals').innerHTML = `
+            <div class="recap-line"><span>Sous-total</span><span>${fmt(subtotal)}</span></div>
+            ${isLiv ? `<div class="recap-line"><span>Livraison</span><span>5,00 €</span></div>` : ''}
+            <div class="recap-line big"><span>Total à régler</span><span>${fmt(total)}</span></div>`;
+
+        /* ── Client info ─────────────────────────── */
+        const infoEl = document.getElementById('client-info');
+        const infos  = [
+            { l: 'Nom', v: customer.nom },
+            { l: 'Téléphone', v: customer.tel },
+            { l: 'E-mail', v: customer.email },
+            { l: 'Mode', v: customer.mode },
+            { l: 'Date', v: customer.date ? new Date(customer.date).toLocaleDateString('fr-FR', {day:'2-digit',month:'long',year:'numeric'}) : '' },
+            { l: 'Créneau', v: customer.creneau },
+        ];
+        infos.forEach(({ l, v }) => {
+            if (!v) return;
+            const div = document.createElement('div');
+            div.className = 'info-item';
+            div.innerHTML = `<label>${l}</label><span>${v}</span>`;
+            infoEl.appendChild(div);
+        });
+        if (customer.notes) {
+            const div = document.createElement('div');
+            div.className = 'info-item';
+            div.style.gridColumn = '1 / -1';
+            div.innerHTML = `<label>Notes</label><span>${customer.notes}</span>`;
+            infoEl.appendChild(div);
+        }
+
+        /* ── Payment option selection ────────────── */
+        function updatePayOptions() {
+            document.querySelectorAll('.pay-opt').forEach(opt => {
+                const radio = opt.querySelector('input[type="radio"]');
+                const inner = opt.querySelector('.pay-opt-inner');
+                inner.classList.toggle('selected', radio.checked);
+            });
+            const virChecked = document.querySelector('input[name="pay"][value="virement"]').checked;
+            document.getElementById('virement-info').classList.toggle('show', virChecked);
+        }
+
+        document.querySelectorAll('.pay-opt, .pay-opt-inner').forEach(el => {
+            el.addEventListener('click', function () {
+                const opt   = this.closest('.pay-opt');
+                const radio = opt.querySelector('input[type="radio"]');
+                radio.checked = true;
+                updatePayOptions();
+            });
+        });
+
+        updatePayOptions();
+
+        /* ── Confirm ─────────────────────────────── */
+        document.getElementById('btn-confirm').addEventListener('click', () => {
+            const payMethod = document.querySelector('input[name="pay"]:checked')?.value;
+
+            if (payMethod === 'bancontact') {
+                // Save total & order info for bancontact page
+                localStorage.setItem('dg_payment', JSON.stringify({
+                    total,
+                    method: 'bancontact',
+                    nom: customer.nom || ''
+                }));
+                window.location.href = 'bancontact.html';
+                return;
+            }
+
+            // Other payment methods → success overlay
+            const prenom = (customer.nom || 'vous').split(' ')[0];
+            document.getElementById('s-prenom').textContent = prenom;
+            const overlay = document.getElementById('success-overlay');
+            overlay.classList.add('visible');
+            document.body.style.overflow = 'hidden';
+            // Clear cart
+            localStorage.removeItem('dg_cart');
+            localStorage.removeItem('dg_customer');
+            localStorage.removeItem('dg_details');
+        });
+
+    })();
+    </script>
+</body>
+</html>

@@ -1,0 +1,717 @@
+<!-- douceurs-gourmandises/panier.html -->
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mon Panier - Douceurs & Gourmandises</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        body { background: #faf8f4; }
+
+        /* ── PAGE LAYOUT ──────────────────────────── */
+        .page-wrapper {
+            max-width: 1180px;
+            margin: 0 auto;
+            padding: 3rem 4% 6rem;
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 2rem;
+            align-items: start;
+        }
+
+        /* ── SECTION CARD ─────────────────────────── */
+        .card {
+            background: #fff;
+            border: 1px solid #ede8de;
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+        }
+        .card-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.25rem;
+            color: var(--accent-color);
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #ede8de;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        .card-title .step-badge {
+            width: 30px; height: 30px;
+            border-radius: 50%;
+            background: var(--accent-color);
+            color: #fff;
+            font-size: 0.85rem;
+            font-weight: 700;
+            display: flex; align-items: center; justify-content: center;
+            font-family: 'Lato', sans-serif;
+            flex-shrink: 0;
+        }
+
+        /* ── EMPTY CART ───────────────────────────── */
+        .empty-cart {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: #aaa;
+        }
+        .empty-cart p { margin-bottom: 1.5rem; font-size: 0.95rem; }
+        .empty-cart a {
+            display: inline-block;
+            padding: 0.7rem 1.5rem;
+            background: var(--primary-color);
+            color: #fff;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 0.88rem;
+        }
+
+        /* ── INVOICE TABLE ────────────────────────── */
+        .invoice-table { width: 100%; border-collapse: collapse; }
+        .invoice-table th {
+            text-align: left;
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: #bbb;
+            padding: 0 0.5rem 0.75rem;
+            border-bottom: 1px solid #eee;
+        }
+        .invoice-table th:last-child { text-align: right; }
+        .invoice-table td {
+            padding: 1rem 0.5rem;
+            border-bottom: 1px solid #f5f0e8;
+            vertical-align: top;
+        }
+        .item-img {
+            width: 52px; height: 52px;
+            border-radius: 8px;
+            object-fit: cover;
+        }
+        .item-img-placeholder {
+            width: 52px; height: 52px;
+            border-radius: 8px;
+            background: var(--secondary-color);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.4rem;
+        }
+        .item-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 0.95rem;
+            color: #2c2c2c;
+        }
+        .item-sub { font-size: 0.78rem; color: #aaa; font-style: italic; }
+        .item-unit { font-size: 0.88rem; color: #888; }
+        .item-total {
+            font-weight: 700;
+            font-size: 0.95rem;
+            color: var(--primary-color);
+            text-align: right;
+        }
+
+        /* ── QTY STEPPER (panier) ─────────────────── */
+        .qty-row {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            margin-top: 0.4rem;
+        }
+        .p-qty-btn {
+            width: 26px; height: 26px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            background: #faf8f4;
+            font-size: 1rem;
+            color: var(--primary-color);
+            font-weight: 700;
+            cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            transition: background 0.15s;
+        }
+        .p-qty-btn:hover { background: #fdf2e6; }
+        .p-qty-num { font-size: 0.88rem; font-weight: 700; min-width: 20px; text-align: center; }
+        .remove-link {
+            font-size: 0.75rem;
+            color: #d9534f;
+            cursor: pointer;
+            margin-left: 0.4rem;
+            text-decoration: underline;
+            border: none;
+            background: none;
+        }
+
+        /* ── ITEM DETAILS (message, allergies) ────── */
+        .item-details-toggle {
+            font-size: 0.75rem;
+            color: var(--primary-color);
+            cursor: pointer;
+            border: none;
+            background: none;
+            padding: 0;
+            margin-top: 0.5rem;
+            text-decoration: underline;
+            display: block;
+        }
+        .item-details-panel {
+            display: none;
+            margin-top: 0.6rem;
+            padding: 0.75rem;
+            background: #fdf8f2;
+            border-radius: 8px;
+            border: 1px solid #f2d9b5;
+        }
+        .item-details-panel.open { display: block; }
+        .mini-input {
+            width: 100%;
+            padding: 0.45rem 0.7rem;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-family: 'Lato', sans-serif;
+            font-size: 0.82rem;
+            background: #fff;
+            margin-top: 0.3rem;
+            outline: none;
+        }
+        .mini-input:focus { border-color: var(--primary-color); }
+        .mini-label { font-size: 0.72rem; font-weight: 700; color: #999; text-transform: uppercase; letter-spacing: 0.05em; }
+        .mini-checks { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.35rem; }
+        .mini-check { font-size: 0.75rem; cursor: pointer; }
+        .mini-check input { margin-right: 4px; }
+
+        /* ── FORM FIELDS ──────────────────────────── */
+        .field { margin-bottom: 1.1rem; }
+        .field label {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: #aaa;
+            margin-bottom: 0.35rem;
+        }
+        .field label .req { color: var(--primary-color); }
+        .field input, .field select, .field textarea {
+            width: 100%;
+            padding: 0.7rem 0.9rem;
+            border: 1.5px solid #e0d8cc;
+            border-radius: 8px;
+            font-family: 'Lato', sans-serif;
+            font-size: 0.93rem;
+            background: #faf8f4;
+            outline: none;
+            transition: border-color 0.2s;
+            appearance: none;
+            -webkit-appearance: none;
+        }
+        .field select {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M0 0l6 8 6-8z' fill='%23BC6C25'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 0.9rem center;
+            padding-right: 2.2rem;
+        }
+        .field input:focus, .field select:focus, .field textarea:focus {
+            border-color: var(--primary-color);
+            background: #fff;
+        }
+        .field input.invalid, .field select.invalid { border-color: #d9534f; }
+        .field .err { font-size: 0.74rem; color: #d9534f; display: none; margin-top: 0.25rem; }
+        .field.has-error .err { display: block; }
+        .field textarea { resize: vertical; min-height: 75px; }
+
+        .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+
+        /* ── RADIO CARDS ──────────────────────────── */
+        .radio-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+        .radio-card { cursor: pointer; }
+        .radio-card input { display: none; }
+        .radio-card-inner {
+            border: 2px solid #e0d8cc;
+            border-radius: 10px;
+            padding: 0.85rem 1rem;
+            display: flex; align-items: center; gap: 0.65rem;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: #888;
+            transition: border-color 0.2s, background 0.2s;
+        }
+        .radio-card input:checked + .radio-card-inner {
+            border-color: var(--primary-color);
+            background: #fdf8f2;
+            color: var(--primary-color);
+        }
+        .radio-card-inner .ri { font-size: 1.2rem; }
+        .livraison-note {
+            display: none;
+            font-size: 0.8rem;
+            color: #7a5c22;
+            background: #fff8ee;
+            border: 1px solid #f0d9a8;
+            border-radius: 7px;
+            padding: 0.6rem 0.85rem;
+            margin-top: 0.6rem;
+        }
+        .livraison-note.show { display: block; }
+
+        /* ── CGV ──────────────────────────────────── */
+        .cgv-label {
+            display: flex; align-items: flex-start; gap: 0.75rem;
+            cursor: pointer; font-size: 0.85rem; color: #555; line-height: 1.5;
+            padding: 0.85rem 1rem;
+            border: 1.5px solid #e0d8cc;
+            border-radius: 8px;
+        }
+        .cgv-label input { margin-top: 3px; accent-color: var(--primary-color); }
+
+        /* ── ORDER SUMMARY BOX (right column) ──────── */
+        .summary-box {
+            background: #fff;
+            border: 1px solid #ede8de;
+            border-radius: 16px;
+            padding: 1.75rem;
+            position: sticky;
+            top: 80px;
+        }
+        .summary-box h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.15rem;
+            color: var(--accent-color);
+            margin-bottom: 1.25rem;
+            padding-bottom: 0.85rem;
+            border-bottom: 1px solid #ede8de;
+        }
+        .summary-line {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.88rem;
+            color: #666;
+            margin-bottom: 0.6rem;
+        }
+        .summary-line.total {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            font-family: 'Playfair Display', serif;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid #ede8de;
+        }
+        .summary-items { margin-bottom: 1rem; }
+        .summary-item { font-size: 0.82rem; color: #888; margin-bottom: 0.35rem; display: flex; justify-content: space-between; }
+
+        .btn-payer {
+            display: block;
+            width: 100%;
+            padding: 1rem;
+            background: var(--primary-color);
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            font-family: 'Lato', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            text-align: center;
+            cursor: pointer;
+            margin-top: 1.25rem;
+            transition: background 0.2s, transform 0.1s, box-shadow 0.2s;
+            box-shadow: 0 4px 16px rgba(188,108,37,0.28);
+        }
+        .btn-payer:hover { background: #a55c1e; transform: translateY(-1px); }
+        .btn-payer:active { transform: translateY(0); }
+
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 0.85rem;
+            font-size: 0.82rem;
+            color: #bbb;
+            text-decoration: none;
+        }
+        .back-link:hover { color: var(--primary-color); }
+
+        .secure-note {
+            display: flex; align-items: center; gap: 0.4rem;
+            font-size: 0.75rem; color: #ccc;
+            justify-content: center; margin-top: 1rem;
+        }
+
+        @media (max-width: 900px) {
+            .page-wrapper { grid-template-columns: 1fr; }
+            .summary-box { position: static; }
+        }
+        @media (max-width: 600px) {
+            .field-row { grid-template-columns: 1fr; }
+            .radio-cards { grid-template-columns: 1fr; }
+            .page-wrapper { padding: 1.5rem 4% 4rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- NAV -->
+    <nav>
+        <div class="logo">Douceurs & Gourmandises</div>
+        <ul class="nav-links">
+            <li><a href="index.html">Accueil</a></li>
+            <li><a href="patisseries.html">Nos Pâtisseries</a></li>
+            <li><a href="panier.html" class="active">🛒 Panier (<span id="nav-cart-count">0</span>)</a></li>
+            <li><a href="contact.html">Contact</a></li>
+        </ul>
+    </nav>
+
+    <!-- HEADER -->
+    <header style="background-color: var(--secondary-color); padding: 2.5rem 10%; text-align: center;">
+        <p style="text-transform: uppercase; letter-spacing: 2px; color: var(--primary-color); font-size: 0.85rem;">✦ Récapitulatif de votre commande ✦</p>
+        <h1 style="font-family: 'Playfair Display', serif; font-size: 2.5rem; color: var(--primary-color); margin: 0.75rem 0;">Mon Panier</h1>
+    </header>
+
+    <!-- PROGRESS BAR -->
+    <div style="display: flex; justify-content: center; gap: 3rem; padding: 1.2rem; background: white; border-bottom: 1px solid #eee; font-family: 'Lato', sans-serif; font-size: 0.8rem; font-weight: bold; text-transform: uppercase;">
+        <div style="display: flex; align-items: center; gap: 10px; color: #ccc;"><span style="border: 1px solid #ccc; width: 25px; height: 25px; display: flex; align-items: center; justify-content: center; border-radius: 50%;">1</span> Nos Pâtisseries</div>
+        <div style="display: flex; align-items: center; gap: 10px; color: var(--primary-color);"><span style="background: var(--primary-color); color: white; width: 25px; height: 25px; display: flex; align-items: center; justify-content: center; border-radius: 50%;">2</span> Mon Panier</div>
+        <div style="display: flex; align-items: center; gap: 10px; color: #ccc;"><span style="border: 1px solid #ccc; width: 25px; height: 25px; display: flex; align-items: center; justify-content: center; border-radius: 50%;">3</span> Paiement</div>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="page-wrapper">
+
+        <!-- LEFT COLUMN -->
+        <div id="left-col">
+
+            <!-- CART ITEMS -->
+            <div class="card" id="cart-card">
+                <div class="card-title">
+                    <span class="step-badge">🛒</span> Vos articles sélectionnés
+                </div>
+                <div id="cart-content"></div>
+            </div>
+
+            <!-- CLIENT DETAILS FORM -->
+            <div class="card">
+                <div class="card-title">
+                    <span class="step-badge">A</span> Vos coordonnées
+                </div>
+                <div class="field-row">
+                    <div class="field" id="f-nom">
+                        <label>Nom et Prénom <span class="req">*</span></label>
+                        <input type="text" id="nom" placeholder="Sophie Martin" autocomplete="name">
+                        <div class="err">Champ requis.</div>
+                    </div>
+                    <div class="field" id="f-tel">
+                        <label>Téléphone <span class="req">*</span></label>
+                        <input type="tel" id="tel" placeholder="06 12 34 56 78" autocomplete="tel">
+                        <div class="err">Champ requis.</div>
+                    </div>
+                </div>
+                <div class="field" id="f-email">
+                    <label>Adresse e-mail <span class="req">*</span></label>
+                    <input type="email" id="email" placeholder="votre@email.com" autocomplete="email">
+                    <div class="err">E-mail invalide.</div>
+                </div>
+            </div>
+
+            <!-- DELIVERY & DATE -->
+            <div class="card">
+                <div class="card-title">
+                    <span class="step-badge">B</span> Récupération & Date
+                </div>
+                <div class="field">
+                    <label>Mode de retrait <span class="req">*</span></label>
+                    <div class="radio-cards">
+                        <label class="radio-card">
+                            <input type="radio" name="mode" value="boutique" checked>
+                            <div class="radio-card-inner"><span class="ri">🏪</span><div><div>Retrait en boutique</div><small style="font-weight:400; font-size:0.75rem;">Lyon — Gratuit</small></div></div>
+                        </label>
+                        <label class="radio-card">
+                            <input type="radio" name="mode" value="livraison">
+                            <div class="radio-card-inner"><span class="ri">🚚</span><div><div>Livraison à domicile</div><small style="font-weight:400; font-size:0.75rem;">Lyon & périphérie — +5 €</small></div></div>
+                        </label>
+                    </div>
+                    <div class="livraison-note" id="livraison-note">📍 Des frais de livraison de <strong>5 €</strong> seront ajoutés à votre total.</div>
+                </div>
+                <div class="field-row">
+                    <div class="field" id="f-date">
+                        <label>Date souhaitée <span class="req">*</span></label>
+                        <input type="date" id="date">
+                        <div class="err">Minimum 48h à l'avance.</div>
+                    </div>
+                    <div class="field">
+                        <label>Créneau horaire</label>
+                        <select id="creneau">
+                            <option value="Matin 9h-12h">Matin · 9h00 – 12h00</option>
+                            <option value="Après-midi 14h-18h">Après-midi · 14h00 – 18h00</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="field">
+                    <label>Notes particulières</label>
+                    <textarea id="notes" placeholder="Décoration spéciale, emballage cadeau, demande particulière..."></textarea>
+                </div>
+            </div>
+
+            <!-- CGV -->
+            <div class="card">
+                <div class="card-title">
+                    <span class="step-badge">C</span> Confirmation
+                </div>
+                <label class="cgv-label">
+                    <input type="checkbox" id="cgv">
+                    <span>J'accepte les <strong>conditions générales de vente</strong> et reconnais le délai minimum de <strong>48 heures</strong> (7 jours pour les pièces montées).</span>
+                </label>
+                <p id="cgv-err" style="font-size:0.75rem; color:#d9534f; margin-top:0.5rem; display:none;">Vous devez accepter les conditions pour continuer.</p>
+            </div>
+
+        </div>
+
+        <!-- RIGHT COLUMN: SUMMARY -->
+        <div>
+            <div class="summary-box">
+                <h3>Récapitulatif</h3>
+                <div class="summary-items" id="summary-items"></div>
+                <div class="summary-line"><span>Sous-total</span><span id="sum-subtotal">0,00 €</span></div>
+                <div class="summary-line" id="sum-livraison-row" style="display:none;"><span>Livraison</span><span>5,00 €</span></div>
+                <div class="summary-line total"><span>Total</span><span id="sum-total">0,00 €</span></div>
+                <button class="btn-payer" id="btn-payer">Procéder au paiement &rarr;</button>
+                <a href="patisseries.html" class="back-link">← Continuer mes achats</a>
+                <div class="secure-note">🔒 Commande confirmée sous 24h par Sophie</div>
+            </div>
+        </div>
+
+    </div>
+
+    <footer>
+        <p style="text-align: center; margin-top: 1rem; font-size: 0.8rem; opacity: 0.6;">&copy; 2026 Douceurs & Gourmandises · Pâtisserie Artisanale · Lyon | <a href="portfolio.html" style="color: var(--primary-color); text-decoration: underline;">Voir le Portfolio</a></p>
+    </footer>
+
+    <script>
+    (function () {
+
+        /* ── Cart ────────────────────────────────── */
+        let cart = JSON.parse(localStorage.getItem('dg_cart')) || [];
+        function saveCart() { localStorage.setItem('dg_cart', JSON.stringify(cart)); }
+        function getItem(id) { return cart.find(i => i.id === id); }
+
+        /* ── Date min +48h ───────────────────────── */
+        const dateInput = document.getElementById('date');
+        const minD = new Date(); minD.setHours(minD.getHours() + 48);
+        dateInput.min = minD.toISOString().split('T')[0];
+
+        /* ── Delivery toggle ─────────────────────── */
+        document.querySelectorAll('input[name="mode"]').forEach(r => {
+            r.addEventListener('change', () => {
+                const isLiv = r.value === 'livraison' && r.checked;
+                document.getElementById('livraison-note').classList.toggle('show', isLiv);
+                document.getElementById('sum-livraison-row').style.display = isLiv ? 'flex' : 'none';
+                updateSummary();
+            });
+        });
+
+        /* ── Format currency ─────────────────────── */
+        const fmt = n => n.toFixed(2).replace('.', ',') + ' €';
+
+        /* ── Render Cart ─────────────────────────── */
+        function renderCart() {
+            const container = document.getElementById('cart-content');
+            const navCount  = document.getElementById('nav-cart-count');
+            navCount.textContent = cart.reduce((s,i) => s + i.qty, 0);
+
+            if (cart.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-cart">
+                        <p style="font-size:2.5rem; margin-bottom:0.5rem;">🛒</p>
+                        <p>Votre panier est vide.</p>
+                        <a href="patisseries.html">← Voir nos pâtisseries</a>
+                    </div>`;
+                document.getElementById('btn-payer').disabled = true;
+                document.getElementById('btn-payer').style.opacity = '0.4';
+                updateSummary();
+                return;
+            }
+
+            const table = document.createElement('table');
+            table.className = 'invoice-table';
+            table.innerHTML = `<thead><tr>
+                <th colspan="2">Produit</th>
+                <th>Qté</th>
+                <th>P.U.</th>
+                <th>Total</th>
+            </tr></thead>`;
+
+            const tbody = document.createElement('tbody');
+            cart.forEach(item => {
+                const tr = document.createElement('tr');
+                const itemDetails = JSON.parse(localStorage.getItem('dg_details') || '{}');
+                const d = itemDetails[item.id] || {};
+
+                tr.innerHTML = `
+                    <td style="width:60px;">
+                        <img class="item-img" src="${item.img}" alt="${item.name}"
+                             onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+                        <div class="item-img-placeholder" style="display:none;">🥐</div>
+                    </td>
+                    <td>
+                        <div class="item-name">${item.name}</div>
+                        <div class="item-sub">${item.sub}</div>
+                        <div class="qty-row">
+                            <button class="p-qty-btn" data-action="minus" data-id="${item.id}">−</button>
+                            <span class="p-qty-num">${item.qty}</span>
+                            <button class="p-qty-btn" data-action="plus" data-id="${item.id}">+</button>
+                            <button class="remove-link" data-id="${item.id}">Retirer</button>
+                        </div>
+                        <button class="item-details-toggle" data-id="${item.id}">✏️ Personnaliser (message, allergies)</button>
+                        <div class="item-details-panel ${d.open ? 'open' : ''}" id="panel-${item.id}">
+                            <div class="mini-label">Message sur le gâteau</div>
+                            <input class="mini-input" type="text" placeholder="ex: Joyeux Anniversaire !" id="msg-${item.id}" value="${d.message || ''}">
+                            <div class="mini-label" style="margin-top:0.6rem;">Restrictions alimentaires</div>
+                            <div class="mini-checks">
+                                ${['Sans gluten','Sans lactose','Sans œufs','Sans fruits à coque'].map(a =>
+                                    `<label class="mini-check">
+                                        <input type="checkbox" name="al-${item.id}" value="${a}" ${(d.allergies||[]).includes(a)?'checked':''}> ${a}
+                                    </label>`
+                                ).join('')}
+                            </div>
+                        </div>
+                    </td>
+                    <td style="white-space:nowrap; padding-top:1.2rem;">${item.qty}×</td>
+                    <td class="item-unit" style="white-space:nowrap; padding-top:1.2rem;">${fmt(item.price)}</td>
+                    <td class="item-total">${fmt(item.price * item.qty)}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            table.appendChild(tbody);
+            container.innerHTML = '';
+            container.appendChild(table);
+
+            // Bind events
+            container.querySelectorAll('.p-qty-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const id   = parseInt(btn.dataset.id);
+                    const item = getItem(id);
+                    if (btn.dataset.action === 'plus') item.qty++;
+                    else if (item.qty > 1) item.qty--;
+                    saveCart(); renderCart(); updateSummary();
+                });
+            });
+            container.querySelectorAll('.remove-link').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    cart = cart.filter(i => i.id !== parseInt(btn.dataset.id));
+                    saveCart(); renderCart(); updateSummary();
+                });
+            });
+            container.querySelectorAll('.item-details-toggle').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const panel = document.getElementById('panel-' + btn.dataset.id);
+                    panel.classList.toggle('open');
+                });
+            });
+            container.querySelectorAll('.mini-input, .mini-checks input').forEach(input => {
+                input.addEventListener('change', saveDetails);
+            });
+
+            document.getElementById('btn-payer').disabled = false;
+            document.getElementById('btn-payer').style.opacity = '1';
+            updateSummary();
+        }
+
+        /* ── Save per-item details ───────────────── */
+        function saveDetails() {
+            const details = {};
+            cart.forEach(item => {
+                const msgEl = document.getElementById('msg-' + item.id);
+                const allergies = [...document.querySelectorAll(`input[name="al-${item.id}"]:checked`)].map(c => c.value);
+                const panel = document.getElementById('panel-' + item.id);
+                if (msgEl) {
+                    details[item.id] = {
+                        message: msgEl.value,
+                        allergies,
+                        open: panel ? panel.classList.contains('open') : false
+                    };
+                }
+            });
+            localStorage.setItem('dg_details', JSON.stringify(details));
+        }
+
+        /* ── Update summary box ──────────────────── */
+        function updateSummary() {
+            const isLiv   = document.querySelector('input[name="mode"]:checked')?.value === 'livraison';
+            const subtotal = cart.reduce((s, i) => s + i.price * i.qty, 0);
+            const total    = subtotal + (isLiv ? 5 : 0);
+
+            document.getElementById('sum-subtotal').textContent = fmt(subtotal);
+            document.getElementById('sum-total').textContent    = fmt(total);
+
+            const siEl = document.getElementById('summary-items');
+            siEl.innerHTML = cart.map(i =>
+                `<div class="summary-item"><span>${i.name} ×${i.qty}</span><span>${fmt(i.price * i.qty)}</span></div>`
+            ).join('');
+        }
+
+        /* ── Validation ──────────────────────────── */
+        function setErr(fId, show) {
+            const el = document.getElementById(fId);
+            if (!el) return;
+            el.classList.toggle('has-error', show);
+            el.querySelector('input, select')?.classList.toggle('invalid', show);
+        }
+
+        document.getElementById('btn-payer').addEventListener('click', () => {
+            if (cart.length === 0) return;
+            saveDetails();
+
+            const nom   = document.getElementById('nom').value.trim();
+            const tel   = document.getElementById('tel').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const date  = document.getElementById('date').value;
+            const cgv   = document.getElementById('cgv').checked;
+
+            let ok = true;
+            setErr('f-nom',   !nom);   if (!nom) ok = false;
+            setErr('f-tel',   !tel);   if (!tel) ok = false;
+            const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+            setErr('f-email', !emailOk); if (!emailOk) ok = false;
+            const minDate = new Date(); minDate.setHours(minDate.getHours() + 48);
+            const dateOk = date && new Date(date) >= minDate;
+            setErr('f-date', !dateOk); if (!dateOk) ok = false;
+            document.getElementById('cgv-err').style.display = cgv ? 'none' : 'block';
+            if (!cgv) ok = false;
+
+            if (!ok) {
+                const first = document.querySelector('.has-error, #cgv-err[style*="block"]');
+                if (first) first.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                return;
+            }
+
+            // Save customer + order info
+            const isLiv = document.querySelector('input[name="mode"]:checked').value === 'livraison';
+            localStorage.setItem('dg_customer', JSON.stringify({
+                nom, tel, email,
+                mode: isLiv ? 'Livraison (+5 €)' : 'Retrait en boutique (Lyon)',
+                date, creneau: document.getElementById('creneau').value,
+                notes: document.getElementById('notes').value,
+                livraison: isLiv
+            }));
+            window.location.href = 'paiement.html';
+        });
+
+        /* ── Init ───────────────────────────────── */
+        renderCart();
+
+        // Clear errors on input
+        ['nom','tel','email','date'].forEach(id => {
+            const el = document.getElementById(id);
+            el?.addEventListener('input', () => {
+                el.classList.remove('invalid');
+                el.closest('.field')?.classList.remove('has-error');
+            });
+        });
+
+    })();
+    </script>
+</body>
+</html>
