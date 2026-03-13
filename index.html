@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portfolio - Projet Douceurs & Gourmandises</title>
+    <title>Portfolio - Projet Douceurs &amp; Gourmandises</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -53,47 +53,6 @@
             margin: 1rem auto;
         }
 
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin-top: 2rem; }
-
-        .card { background: var(--white); padding: 2rem; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); transition: transform 0.3s; }
-        .card:hover { transform: translateY(-10px); }
-        .card h3 { color: var(--primary); margin-bottom: 1rem; }
-
-        /* Galerie Styles */
-        .gallery { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; }
-        .gallery-item { 
-            position: relative; 
-            overflow: hidden; 
-            border-radius: 12px; 
-            aspect-ratio: 4/3; 
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        }
-        .gallery-item img { 
-            width: 100%; 
-            height: 100%; 
-            object-fit: cover; 
-            transition: transform 0.5s ease;
-        }
-        .gallery-item:hover img { transform: scale(1.1); }
-        .gallery-overlay {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(188, 108, 37, 0.8);
-            color: white;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            font-weight: bold;
-            text-align: center;
-            padding: 1rem;
-        }
-        .gallery-item:hover .gallery-overlay { opacity: 1; }
-
-        .tech-stack { display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center; margin-top: 1rem; }
-        .tech-item { background: var(--secondary); padding: 0.5rem 1.5rem; border-radius: 20px; font-weight: bold; font-size: 0.9rem; }
-
         .btn-group { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
         .btn {
             display: inline-block;
@@ -113,151 +72,144 @@
         }
         .btn-outline:hover { background: var(--white); color: var(--dark); }
 
+        .tech-stack { display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center; margin-top: 1rem; }
+        .tech-item { background: var(--secondary); padding: 0.5rem 1.5rem; border-radius: 20px; font-weight: bold; font-size: 0.9rem; }
+
         footer { background: var(--dark); color: var(--white); text-align: center; padding: 3rem 0; margin-top: 5rem; }
 
         @media (max-width: 768px) {
             h1 { font-size: 2.5rem; }
             .container { padding: 3rem 5%; }
         }
+
         /* Projets Grid */
-.projets-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-    gap: 2.5rem;
-    max-width: 1100px;
-    margin: 0 auto;
-}
-.projet-card {
-    background: var(--white);
-    border-radius: 15px;
-    overflow: hidden;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.05);
-    transition: transform 0.3s, box-shadow 0.3s;
-    display: flex;
-    flex-direction: column;
-}
-.projet-card:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 15px 30px rgba(0,0,0,0.1);
-}
-.projet-img {
-    width: 100%;
-    height: 220px;
-    object-fit: cover;
-    object-position: top;
-    display: block;
-    border-radius: 10px 10px 0 0;
-}
-.projet-content {
-    padding: 1.5rem;
-}
-.projet-content h3 {
-    color: var(--primary);
-    margin-bottom: 0.5rem;
-}
-.projet-type {
-    font-size: 0.9rem;
-    color: #666;
-    margin-bottom: 1rem;
-    display: inline-block;
-    background: var(--secondary);
-    padding: 0.2rem 1rem;
-    border-radius: 20px;
-}
-.projet-desc {
-    margin-bottom: 1.5rem;
-    line-height: 1.6;
-}
-.projet-tech {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    justify-content: center;
-    margin-bottom: 1rem;
-}
-.projet-tech span {
-    background: var(--secondary);
-    padding: 0.3rem 1rem;
-    border-radius: 20px;
-    font-size: 0.8rem;
-    font-weight: bold;
-    color: var(--dark);
-}
+        .projets-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2.5rem;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+        .projet-card {
+            background: var(--white);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+            transition: transform 0.3s, box-shadow 0.3s;
+            display: flex;
+            flex-direction: column;
+        }
+        .projet-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+        }
+        .projet-img {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            object-position: center 20%;
+            display: block;
+            border-radius: 10px 10px 0 0;
+            background-color: var(--secondary);
+        }
+        .projet-content {
+            padding: 1.5rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        .projet-content h3 {
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+        .projet-type {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 1rem;
+            display: inline-block;
+            background: var(--secondary);
+            padding: 0.2rem 1rem;
+            border-radius: 20px;
+        }
+        .projet-desc {
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+            flex: 1;
+        }
+        .projet-tech {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
+        .projet-tech span {
+            background: var(--secondary);
+            padding: 0.3rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            color: var(--dark);
+        }
     </style>
 </head>
 <body>
 
     <header>
         <h1>ZefUserMoh</h1>
-            <p class="subtitle">Développeur web passionné · Création de sites sur-mesure</p>
-                <div class="btn-group">
-                    <a href="#projets" class="btn">Voir mes projets</a>
-                    <a href="#contact" class="btn btn-outline">Me contacter</a>
-                </div>
+        <p class="subtitle">D&#233;veloppeur web passionn&#233; &middot; Cr&#233;ation de sites sur-mesure</p>
+        <div class="btn-group">
+            <a href="#projets" class="btn">Voir mes projets</a>
+            <a href="#contact" class="btn btn-outline">Me contacter</a>
+        </div>
     </header>
 
     <section class="container" id="projets">
-    <h2 class="section-title">Mes Projets</h2>
-    
-    <div class="projets-grid">
-        <!-- PROJET 1 : Douceurs & Gourmandises -->
-        <div class="projet-card">
-       <img src="images/projets/douceurs-screenshot.png" alt="Douceurs & Gourmandises" class="projet-img">
-            <div class="projet-content">
-                <h3>Douceurs & Gourmandises</h3>
-                <p class="projet-type">🍰 Site vitrine · Pâtisserie artisanale</p>
-                <p class="projet-desc">Site moderne avec menu burger, 4 pages, design responsive et panier simulé.</p>
-                <div class="projet-tech">
-                    <span>HTML5</span>
-                    <span>CSS3</span>
-                    <span>JavaScript</span>
-                </div>
-                <a href="projets/douceurs-gourmandises.html" class="btn">Voir le projet →</a>
-            </div>
-        </div>
+        <h2 class="section-title">Mes Projets</h2>
 
-        <!-- PROJET 2 : Les Délices de Papy Marcel -->
-        <div class="projet-card">
-            <img src="images/projets/papy-screenshot.png" alt="Les Délices de Papy Marcel" class="projet-img">
-            <div class="projet-content">
-                <h3>Les Délices de Papy Marcel</h3>
-                <p class="projet-type">🍬 Site one-page · Confiserie traditionnelle</p>
-                <p class="projet-desc">Design rétro chaleureux, photos générées par IA, téléphone mis en avant.</p>
-                <div class="projet-tech">
-                    <span>HTML5</span>
-                    <span>CSS3</span>
-                    <span>Design rétro</span>
+        <div class="projets-grid">
+            <!-- PROJET 1 : Douceurs & Gourmandises -->
+            <div class="projet-card">
+                <img src="images/projets/douceurs-screenshot.png"
+                     alt="Douceurs et Gourmandises"
+                     class="projet-img"
+                     loading="lazy">
+                <div class="projet-content">
+                    <h3>Douceurs &amp; Gourmandises</h3>
+                    <p class="projet-type">&#127856; Site vitrine &middot; P&#226;tisserie artisanale</p>
+                    <p class="projet-desc">Site moderne avec menu burger, 4 pages, design responsive et panier simul&#233;.</p>
+                    <div class="projet-tech">
+                        <span>HTML5</span>
+                        <span>CSS3</span>
+                        <span>JavaScript</span>
+                    </div>
+                    <a href="projets/douceurs-gourmandises.html" class="btn">Voir le projet &#8594;</a>
                 </div>
-                <a href="projets/papy-marcel.html" class="btn">Voir le projet →</a>
             </div>
-        </div>
-    </div>
-</section>
 
-    <section style="background: var(--white);" class="container">
-        <h2 class="section-title">Aperçu Visuel</h2>
-        <div class="gallery">
-            <div class="gallery-item">
-                <img src="images/specialites/classiques.png" alt="Classiques">
-                <div class="gallery-overlay">Pâtisseries Classiques</div>
-            </div>
-            <div class="gallery-item">
-                <img src="images/produits/cake-marbre.webp" alt="Cake Marbré">
-                <div class="gallery-overlay">Cake Marbré Signature</div>
-            </div>
-            <div class="gallery-item">
-                <img src="images/specialites/signatures.png" alt="Signatures">
-                <div class="gallery-overlay">Créations Audacieuses</div>
-            </div>
-            <div class="gallery-item">
-                <img src="images/specialites/evenements.png" alt="Événements">
-                <div class="gallery-overlay">Gâteaux Sur-Mesure</div>
+            <!-- PROJET 2 : Les Delices de Papy Marcel -->
+            <div class="projet-card">
+                <img src="images/projets/papy-screenshot.png"
+                     alt="Les Delices de Papy Marcel"
+                     class="projet-img"
+                     loading="lazy">
+                <div class="projet-content">
+                    <h3>Les D&#233;lices de Papy Marcel</h3>
+                    <p class="projet-type">&#127852; Site one-page &middot; Confiserie traditionnelle</p>
+                    <p class="projet-desc">Design r&#233;tro chaleureux, photos g&#233;n&#233;r&#233;es par IA, t&#233;l&#233;phone mis en avant.</p>
+                    <div class="projet-tech">
+                        <span>HTML5</span>
+                        <span>CSS3</span>
+                        <span>Design r&#233;tro</span>
+                    </div>
+                    <a href="projets/papy-marcel.html" class="btn">Voir le projet &#8594;</a>
+                </div>
             </div>
         </div>
     </section>
 
     <section style="background: var(--secondary);" class="container">
-        <h2 class="section-title">Compétences Techniques</h2>
+        <h2 class="section-title">Comp&#233;tences Techniques</h2>
         <div class="tech-stack">
             <span class="tech-item">HTML5 / CSS3 Semantic</span>
             <span class="tech-item">JavaScript (Vanilla)</span>
@@ -268,14 +220,14 @@
         </div>
     </section>
 
-    <section class="container" style="text-align: center;">
-        <h2 class="section-title">Prêt à collaborer ?</h2>
-        <p>Ce projet démontre ma capacité à livrer un produit web complet, esthétique et techniquement robuste.</p>
+    <section class="container" id="contact" style="text-align: center;">
+        <h2 class="section-title">Pr&#234;t &#224; collaborer&nbsp;?</h2>
+        <p>Ce projet d&#233;montre ma capacit&#233; &#224; livrer un produit web complet, esth&#233;tique et techniquement robuste.</p>
         <a href="mailto:votre@email.com" class="btn">Me contacter</a>
     </section>
 
     <footer>
-        <p>&copy; 2026 Portfolio Douceurs & Gourmandises · Développé avec passion</p>
+        <p>&copy; 2026 Portfolio Douceurs &amp; Gourmandises &middot; D&#233;velopp&#233; avec passion</p>
     </footer>
 
 </body>
