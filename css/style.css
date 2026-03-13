@@ -136,6 +136,8 @@ nav {
     display: flex;
     flex-direction: column;
     height: 100%;
+    max-width: 280px;  /* Limite la largeur de toute la carte */
+    margin: 0 auto;    /* Centre les cartes */
 }
 
 .projet-card:hover {
@@ -144,15 +146,18 @@ nav {
 }
 
 .projet-card img {
-    width: 100%;
-    height: 220px;
-    object-fit: cover;
-    border-bottom: 3px solid var(--secondary-color);
+    width: 100px;       /* 100px ≈ 2,5 cm sur un écran standard */
+    height: 100px;      /* Carré parfait */
+    object-fit: cover;  /* Recadre sans déformer */
+    border-radius: 10px; /* Coins légèrement arrondis */
+    border: 2px solid var(--secondary-color);
+    display: block;
+    margin: 1rem auto 0; /* Centre l'image dans la carte */
 }
 
 .projet-content {
-    padding: 1.8rem;
-    flex: 1;
+    padding: 1rem;
+    text-align: center;  /* Centre tout le texte */
 }
 
 .projet-content h3 {
@@ -176,10 +181,7 @@ nav {
 }
 
 .projet-tech {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    margin-bottom: 1.5rem;
+    justify-content: center; /* Centre les badges */
 }
 
 .projet-tech span {
