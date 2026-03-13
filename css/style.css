@@ -1,8 +1,7 @@
-/* douceurs-gourmandises/css/style.css */
 :root {
-    --primary-color: #BC6C25; /* Caramel Intense */
-    --secondary-color: #F4EBD0; /* Crème Vanille */
-    --accent-color: #283618; /* Vert Sombre / Menthe */
+    --primary-color: #BC6C25;
+    --secondary-color: #F4EBD0;
+    --accent-color: #283618;
     --text-color: #333;
     --white: #ffffff;
     --font-heading: 'Playfair Display', serif;
@@ -71,45 +70,155 @@ nav {
     border-bottom: 2px solid var(--primary-color);
     padding-bottom: 2px;
 }
+/* ===== STYLES SPÉCIFIQUES AU PORTFOLIO ===== */
 
-/* Hero Section */
-.hero {
-    height: 85vh;
+/* Hero section du portfolio (toi) */
+.portfolio-hero {
+    height: 80vh;
     display: flex;
-    align-items: center;
+    flex-direction: column;
     justify-content: center;
+    align-items: center;
     text-align: center;
-    background: linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)),
-                url('../images/hero/sophie-atelier.png');
-    background-size: cover;
-    background-position: center;
-    background-attachment: fixed;
+    background: linear-gradient(135deg, var(--accent-color), var(--primary-color));
     color: var(--white);
     padding: 0 5%;
 }
 
-.hero-content {
-    max-width: 800px;
-    padding: 3rem;
-    background: rgba(0, 0, 0, 0.35);
-    border-radius: 20px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 0 15px 35px rgba(0,0,0,0.3);
-}
-
-.hero h1 {
+.portfolio-hero h1 {
     color: var(--white);
-    font-size: clamp(2rem, 5vw, 3.5rem); /* Taille adaptative */
-    margin-bottom: 1.5rem;
-    line-height: 1.2;
-    text-shadow: 2px 2px 8px rgba(0,0,0,0.6);
+    font-size: clamp(2.5rem, 6vw, 4.5rem);
+    margin-bottom: 1rem;
 }
 
-.hero p {
-    font-size: 1.2rem;
-    line-height: 1.6;
+.portfolio-hero .subtitle {
+    font-size: 1.3rem;
     margin-bottom: 2rem;
-    text-shadow: 1px 1px 4px rgba(0,0,0,0.6);
+    opacity: 0.9;
+}
+
+/* Section générale */
+.section {
+    padding: 5rem 10%;
+}
+
+.section-title {
+    text-align: center;
+    font-size: 2.5rem;
+    margin-bottom: 3rem;
+    position: relative;
+}
+
+.section-title::after {
+    content: '';
+    display: block;
+    width: 60px;
+    height: 3px;
+    background: var(--primary-color);
+    margin: 1rem auto;
+}
+
+/* Grille des projets */
+.projets-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 2.5rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.projet-card {
+    background: var(--white);
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.projet-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+}
+
+.projet-card img {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+    border-bottom: 3px solid var(--secondary-color);
+}
+
+.projet-content {
+    padding: 1.8rem;
+}
+
+.projet-content h3 {
+    color: var(--primary-color);
+    margin-bottom: 0.5rem;
+}
+
+.projet-type {
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 1rem;
+    display: inline-block;
+    background: var(--secondary-color);
+    padding: 0.2rem 1rem;
+    border-radius: 20px;
+}
+
+.projet-desc {
+    margin-bottom: 1.5rem;
+    line-height: 1.6;
+}
+
+.projet-tech {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.projet-tech span {
+    background: var(--secondary-color);
+    padding: 0.3rem 1rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    color: var(--accent-color);
+}
+
+/* Boutons */
+.btn {
+    display: inline-block;
+    padding: 0.8rem 2rem;
+    background-color: var(--primary-color);
+    color: var(--white);
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background 0.3s;
+    border: none;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.btn:hover {
+    background-color: #A35A1E;
+}
+
+.btn-outline {
+    background: transparent;
+    border: 2px solid var(--white);
+}
+
+.btn-outline:hover {
+    background: var(--white);
+    color: var(--accent-color);
+}
+
+/* Contact */
+.contact-section {
+    background: var(--secondary-color);
+    text-align: center;
 }
 
 /* Footer */
@@ -120,120 +229,17 @@ footer {
     text-align: center;
 }
 
-.btn {
-    display: inline-block;
-    padding: 0.8rem 2rem;
-    background-color: var(--primary-color);
-    color: var(--white);
-    text-decoration: none;
-    border-radius: 5px;
-    transition: background 0.3s;
-}
-
-.btn:hover {
-    background-color: #A35A1E; /* Caramel plus sombre pour le clic */
-}
-
-/* Grille de produits */
-.produits-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 2rem;
-    padding: 3rem 10%;
-}
-
-.produit-card {
-    background: var(--white);
-    border-radius: 10px;
-    overflow: hidden;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Ajout transition ombre */
-    text-align: center;
-    padding-bottom: 1.5rem;
-}
-
-.produit-card:hover {
-    transform: translateY(-5px); /* Soulèvement léger */
-    box-shadow: 0 10px 20px rgba(0,0,0,0.1); /* Ombre plus marquée */
-}
-
-.produit-card img {
-    width: 100%;
-    height: 250px;
-    object-fit: cover;
-    /* On ajoute l'arrondi en haut pour épouser la forme de la carte */
-    border-radius: 15px 15px 0 0; 
-    border-bottom: 2px solid var(--secondary-color);
-}
-
-.produit-img-placeholder {
-    width: 100%;
-    height: 250px;
-    /* On enlève le flex et le centrage du texte car l'image va tout remplir */
-    overflow: hidden; 
-}
-
-.produit-img-placeholder img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover; /* L'image remplit la case sans s'écraser */
-    display: block;
-}
-
-.produit-card h3 {
-    margin: 1.5rem 0 0.5rem;
-}
-
-.produit-card .prix {
-    color: var(--primary-color);
-    font-weight: bold;
-    font-size: 1.2rem;
-}
-
-/* Formulaires */
-form {
-    max-width: 600px;
-    margin: 3rem auto;
-    padding: 2rem;
-    background: var(--white);
-    border-radius: 10px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-}
-
-.form-group {
-    margin-bottom: 1.5rem;
-    text-align: left;
-}
-
-.form-group label {
-    display: block;
-    margin-bottom: 0.5rem;
-    font-weight: bold;
-}
-
-.form-group input, .form-group textarea, .form-group select {
-    width: 100%;
-    padding: 0.8rem;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    font-family: inherit;
-}
-
-.form-group textarea {
-    height: 150px;
-}
- .categorie-titre {
-    grid-column: 1 / -1; /* Prend toute la largeur de la grille */
-    font-family: 'Playfair Display', serif;
-    font-size: 2rem;
-    margin: 3rem 0 1.5rem 0;
-    border-bottom: 2px solid var(--primary-color);
-    padding-bottom: 0.5rem;
-}
-
-.allergene {
-    font-size: 0.8rem;
-    color: #888;
-    font-style: italic;
-    margin-top: 5px;
+/* Media Queries */
+@media (max-width: 768px) {
+    .nav-links {
+        display: none; /* À remplacer par menu burger si besoin */
+    }
+    
+    .projets-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .section {
+        padding: 3rem 5%;
+    }
 }
