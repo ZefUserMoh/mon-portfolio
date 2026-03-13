@@ -133,6 +133,9 @@ nav {
     overflow: hidden;
     box-shadow: 0 5px 20px rgba(0,0,0,0.05);
     transition: transform 0.3s, box-shadow 0.3s;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
 }
 
 .projet-card:hover {
@@ -149,6 +152,7 @@ nav {
 
 .projet-content {
     padding: 1.8rem;
+    flex: 1;
 }
 
 .projet-content h3 {
@@ -185,6 +189,13 @@ nav {
     font-size: 0.8rem;
     font-weight: bold;
     color: var(--accent-color);
+}
+
+.projet-card .btn {
+    display: inline-block;
+    margin-top: 1rem;
+    width: auto;
+}
 }
 
 /* Boutons */
